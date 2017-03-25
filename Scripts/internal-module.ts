@@ -1,7 +1,7 @@
 /// <reference path="../node_modules/@types/toastr/index.d.ts" />
 //create an internally named module (and will extend any existing module named 'Shapes' as well
 
-namespace Shapes {
+namespace Shapes.Squares {
     //export the rectangle on the shapes module
     export class Rectangle implements IRectangle {
         constructor (public height: number, public width: number) {}
@@ -19,23 +19,8 @@ namespace Shapes {
 
 //var myRectangle = Shapes.________ -> it cannot get at Shapes here without Shapes being exported first
 
-namespace Program {
-    export class Main {
-        public run() {
-            //note: these are in the global ns
-            var myRectangle : Shapes.IRectangle = new Shapes.Rectangle(10,5);
-
-            var area : number = myRectangle.getArea();
-            toastr.info("area = " + area);
-        }
-    }
-}
-
-var app = new Program.Main;
-app.run();
-
 //extend the shapes module
-namespace Shapes {
+namespace Shapes.Circles {
     export class Circle {
         constructor (public radius: number) {}
     }
