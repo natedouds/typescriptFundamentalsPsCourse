@@ -31,8 +31,7 @@ var Program;
     }());
     Program.Main = Main;
 })(Program || (Program = {}));
-var p = Program;
-var app = new p.Main;
+var app = new Program.Main;
 app.run();
 //extend the shapes module
 (function (Shapes) {
