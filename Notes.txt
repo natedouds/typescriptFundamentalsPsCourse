@@ -190,3 +190,7 @@ modules are open; can import others, export features (including public/private f
 if you simply create a file like global-module.ts, everything in this file will create a module, and it will EXTEND the global namespace (window object)
 
 to create internal, see internal-module; it automatically creates an iify
+
+you can reference internal modules by adding a reference tag to within other files
+
+import statments make use of shorter namespaces (think using statements)
