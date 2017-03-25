@@ -18,10 +18,22 @@ namespace Shapes {
 }
 
 //var myRectangle = Shapes.________ -> it cannot get at Shapes here without Shapes being exported first
-var myRectangle : Shapes.IRectangle = new Shapes.Rectangle(10,5);
 
-var area : number = myRectangle.getArea();
-toastr.info("area = " + area);
+namespace Program {
+    export class Main {
+        public run() {
+            //note: these are in the global ns
+            var myRectangle : Shapes.IRectangle = new Shapes.Rectangle(10,5);
+
+            var area : number = myRectangle.getArea();
+            toastr.info("area = " + area);
+        }
+    }
+}
+
+import p = Program;
+var app = new p.Main;
+app.run();
 
 //extend the shapes module
 namespace Shapes {

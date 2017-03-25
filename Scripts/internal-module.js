@@ -16,9 +16,24 @@ var Shapes;
     Shapes.Rectangle = Rectangle;
 })(Shapes || (Shapes = {}));
 //var myRectangle = Shapes.________ -> it cannot get at Shapes here without Shapes being exported first
-var myRectangle = new Shapes.Rectangle(10, 5);
-var area = myRectangle.getArea();
-toastr.info("area = " + area);
+var Program;
+(function (Program) {
+    var Main = (function () {
+        function Main() {
+        }
+        Main.prototype.run = function () {
+            //note: these are in the global ns
+            var myRectangle = new Shapes.Rectangle(10, 5);
+            var area = myRectangle.getArea();
+            toastr.info("area = " + area);
+        };
+        return Main;
+    }());
+    Program.Main = Main;
+})(Program || (Program = {}));
+var p = Program;
+var app = new p.Main;
+app.run();
 //extend the shapes module
 (function (Shapes) {
     var Circle = (function () {
