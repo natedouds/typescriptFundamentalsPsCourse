@@ -194,3 +194,41 @@ to create internal, see internal-module; it automatically creates an iify
 you can reference internal modules by adding a reference tag to within other files
 
 import statments make use of shorter namespaces (think using statements)
+
+_____________________________________________
+AMD module loading is a way that allows require.js to point to a start function
+which in turn will start loading dependencies
+it does this by simply calling var SomeDep = require('./pathToDep');
+then in the html file, the only script reference looks like this:
+<script data-main="/scriptPath/mainFile" src"/scriptPath/require.js"></srcipt>
+
+mainFile looks like this:
+require.config({
+    baseUrl: "scriptsPath/baseUrl"
+});
+
+//the below assumes a file called appInit, and that file exports a startFucntionName
+require(['appInit'], (appInit) => { appInit.startFunctionName(); });
+
+in appInit
+
+export function appInit() {...
+
+_____________________________________________
+Additionally, you can reference 3rd party tools w/ AMD
+you do this using by listing reference paths to the *.d.ts files, and then use:
+declare var $: JQueryStatic;
+
+then in the mainFile, add a prop to the config param
+{
+    ...,
+    shim: {
+        jquery: {
+            exports: '$'
+        }
+    },
+    paths: {
+        'jquery': '../jquery-1.8.3',
+        'otherDep': '../otherDep'
+    },
+    ...
