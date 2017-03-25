@@ -1,0 +1,192 @@
+important keywords and operators
+
+class - container for members such as props and funcs
+constructor - init functionality in a class
+exports - export member from a module
+extends - extend a class or interface
+implements - implements interface
+imports - import module
+interface - defines code contract
+module / namespace - container for classes / other code
+public/private - visibility modifiers
+... - rest parameter syntax
+=> - arrow syntax for defs and funcs
+<typeName> - cast/convert between types
+
+_____________________________________________
+Type Annotations
+: - separator between var / parm names and types
+VARIABLES:
+ - you can use inference (i.e. var num = 2; -> where ts knows this is a number)
+ - you can be more explicit (i.e. var num: number = 2; -> where it is obviously a number)
+ - you can declare w/o a type (i.e. var any1; -> where the type is actually the base type (any) in ts)
+
+When declaring things outside of your control, you can use 'declare' for ambient declaration
+ - declare var document;
+ - document.title = "Hello";
+ //lib.d.ts is referenced by default and contains refs for the DOM and JavaScript
+ //additionally, you can add a definition file; /// <reference path="jquery.d.ts" /> -> this will provide all of the intellisense and type safety
+ //these can often be found by the developer of the package (they exist for jquery, node, etc...)
+   - additionall, you can do npm install --save-dev @types/PACKAGENAME -> i.e. @types/angular
+   - Then add the index.d.ts to the files in the tsconfig.json
+    - i.e. { "files": [ "node_modules/@types/knockout/index.d.ts" ] }
+- Watch for errors in webstorm using the view / windows / TypeScript option
+
+_____________________________________________
+OBJECTS - funcs, class, module, interface, and literal types
+ - may contain
+   - public/private, required/optional props
+   - call signatures
+   - construct signatures
+   - index signatures
+ - explicit definition
+   - var points: Object = { x: 10, y: 20 };
+   - var multiply = function (x: number) { return x * x; };  //note: type is Function
+   - var multiplyMore: Function; multiplyMore = function (...
+   - optional params are supported; var squareIt = function (rect: { h: number; w?: number; }) {...} //here w? is an optional param to an incoming object
+
+_____________________________________________
+FUNCTION
+ - SomeFunction : (param1: string, param2: number, param3: any) => void
+     = function (parameterOne, parameterTwo, parameterThree) {...}
+     //the above reads: the SomeFunction 'is of type' ( : ) string, number, and any, and will return ( => ) void
+- can have a function's params adhere to an interface:
+  - interface SquareInterface {(x: number): number;}     
+  - var squareItBasic: SquareInterface = (num) => num * num; //here, these params must be numbers
+params can be supplied to a function using the '...' //equiv to params keyword in .net
+//can be used like: paramsFunction(new firstParam: TYPE, new secondParam: TYPE) etc...
+paramsFunction(...myParams: TYPE[]) { }
+
+_____________________________________________
+Code Hierarchy
+Module/Namespace - top -> act as a naming container that can export members
+ - class -> container for members (fields, ctor, props, funcs)
+   - can impl interface
+
+Typescript works with node
+npm install -g typescript
+
+_____________________________________________
+CLASSES and INTERFACES
+class NameOfClass {
+    constructor(public prop1: number, prop2: string) { }
+    //in the above, the public keyword will auto generate a public backing field, which is equivalent to NameOfClass.prop1, and within the class, use this.prop1 to access
+}
+
+you can create properties, both public and private are options, and you can have setters / getters
+ - note: props are a ES5 and later feature ONLY; try having the typescript compiler point at ES3 to work within this version
+   - if you want the equivalent of props w/ ES3, you can simply create a custom filter function for the ctor, i.e. setProp(type: TYPE)...
+
+class OtherClass {
+    private _prop: TYPE;
+
+    constructor(prop: TYPE) {
+        this.prop = prop;
+    }
+
+    //filter for get/set
+    get prop(): TYPE { return this._prop }
+    set prop(value: TYPE) {
+        if (value == undefined) throw 'some message';
+        this._prop = value;
+    }
+}
+
+you can add functions, just remember that you don't need the keyword function
+class SomeClass {
+    //inside of a class, you don't put the function keyword
+    //the below function is a void return type
+    someVoidFunction() : void {
+        //logic...
+    }
+
+    someReturnTypeFunction() : SomeType {
+        return new SomeType;
+    }
+}
+
+Classes can contain complex types (i.e. this is a class that contains another class
+
+Casting Types:
+//the below will fail, as it it returns an element and not a htmltableelement
+var table : HTMLTableElement = document.createElement('table'); //lib.d.ts (dom el)
+
+//the below will pass, by casting it to the type
+var table : HTMLTableElement = <HTMLTableElement>document.createElement('table'); //convert from html element to HTMLTableElement //again, it knows about this type because of DOM Type Definition file
+
+_____________________________________________
+Extending Types
+ - TS allows us to write more OO code, vs using prototype
+ //ChildClass derives from ParentClass
+ class ChildClass extends ParentClass {
+    public myChildProp: DIFFERENT_TYPE;
+
+    //optional constructor
+    constructor(myProp: TYPE, myChildProp: DIFFERENT_TYPE) {
+
+        super(myProp); //call base class
+
+        this.myChildProp = myChildProp;
+    }
+
+ }
+
+ class ParentClass {
+    public myProp: TYPE;
+    constructor(myProp: TYPE) {
+        this.myProp = myProp;
+    }
+
+ }
+
+_____________________________________________
+Interfaces -> note: these are only used during build; but have no output JS
+interface IMyInterface {
+    firstField: boolean;
+    secondField: string;
+    optionalField?: string; //? means optional to implementations
+    reqFuncOne(callback: (callbackParamOne: boolean, callbackParamTwo: string) => void) : void; //callback doesn't return anything, but must have a bool and string, and reqFuncOne doesn't return anything
+    reqFuncTwo(callback: (callbackParamOne: TYPE) => void) : TYPE2; //callback doesn't return anything, but must have TYPE passed in, and reqFuncTwo returns TYPE2
+}
+
+class ConcreteMyInterface implements IMyInterface {
+    reqFuncOne(...
+    reqFuncTwo(...
+    firstField: true;
+    secondField: "something";
+}
+
+class SomeClass {
+    someProp: IMyInterface; // someProp can be anything that implements IMyInterface
+    constructor(data: IMyInterface) {
+        this.someProp = data;
+    }
+}
+
+new SomeClass(new ConcreteMyInterface);
+
+-------Can additionally extend an interface
+interface IInterfaceOne {
+    prop1: string;
+}
+
+interface IInterfaceTwo extends IInterfaceOne {
+    prop2: string;
+    //also will have prop1
+}
+
+_____________________________________________
+Modules
+
+Allow you to separate code into units of work
+
+declare with module keyword
+module myModule { }
+class {... will create a global module
+you can extend mdules, custom or the global
+each module has a specific role, separation of concerns
+modules are open; can import others, export features (including public/private functionality)
+
+if you simply create a file like global-module.ts, everything in this file will create a module, and it will EXTEND the global namespace (window object)
+
+to create internal, see internal-module; it automatically creates an iify
